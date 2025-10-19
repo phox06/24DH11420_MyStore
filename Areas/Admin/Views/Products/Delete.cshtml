@@ -1,0 +1,21 @@
+﻿@model _24DH11420_LTTH_BE234.Models.Product
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/Admin_Layout.cshtml";
+}
+
+<h2 class="bg-warning">Xóa sản phẩm</h2>
+
+<h3 class="bg-danger">Bạn có chắc chắn muốn xóa mục này không?</h3>
+<div>
+
+    @Html.Partial("PVProductInfo", Model)
+    <dt style="padding:10px"></dt>
+    <dd style="padding:10px">
+        @Html.ActionLink("Xóa", "Delete", new { id = Model.ProductID }, new { @class = "btn btn-danger" }) |
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary" })
+    </dd>
+    
+
+</div>
