@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using _24DH11420_LTTH_BE234.Models;
+using _24DH11420_LTTH_BE234.Models.ViewModel;
 
 namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 {
@@ -15,10 +16,21 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         private MyStoreEntities db = new MyStoreEntities();
 
         // GET: Admin/Products
-        public ActionResult Index()
+        public ActionResult Index(string searchTerm)
         {
-            var products = db.Products.Include(p => p.Category);
-            return View(products.ToList());
+            var model = new SearchProductVM();
+            var products=db.Products.AsQueryable();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+
+                products = products.Where(p =>
+                    p.ProductName.Contains(searchTerm) ||
+                    p.ProductDescription.Contains(searchTerm) ||
+                    p.Category.CategoryName.Contains(searchTerm));
+
+            }
+            model.Products=products.ToList();
+            return View(model);
         }
 
         // GET: Admin/Products/Details/5
@@ -128,5 +140,6 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }

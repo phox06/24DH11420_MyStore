@@ -1,0 +1,59 @@
+﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.SearchProductVM
+<head>
+    <style>
+        img {
+            height: 150px;
+            max-width: 150px;
+        }
+    </style>
+</head>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <h2 class="bg-success">DANH SÁCH SẢN PHẨM</h2>
+
+    <table class="table bg-info table-responsive">
+        <thead>
+            <tr>
+                <th class="bg-success col-md-2">Hình ảnh</th>
+                <th class="bg-success col-md-3">Tên sản phẩm</th>
+                <th class="bg-success col-md-1">Đơn giá</th>
+                <th class="bg-success col-md-2">Danh mục</th>
+                <th class="bg-success col-md-4"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content(product.ProductImage)" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.ProductPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.Category.CategoryName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Sửa", "Edit", new { id = product.ProductID }, new { @class = "btn btn-primary btn-sm" }) |
+                        @Html.ActionLink("Chi tiết", "Details", new { id = product.ProductID }, new { @class = "btn btn-primary btn-sm" }) |
+                        @Html.ActionLink("Xóa", "Delete", new { id = product.ProductID }, new { @class = "btn btn-primary btn-sm" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    < p > Không tìm được sản phẩm nào phù hợp.</ p >
+}
+<div class="form-group">
+    <div class="col-md-offset-8 col-md-4">
+        @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
