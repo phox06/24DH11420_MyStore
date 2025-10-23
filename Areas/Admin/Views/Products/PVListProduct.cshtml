@@ -1,4 +1,6 @@
 ﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.SearchProductVM
+@using PagedList
+@using PagedList.Mvc
 <head>
     <style>
         img {
@@ -7,6 +9,29 @@
         }
     </style>
 </head>
+<div class="form-group order-container">
+    Sắp xếp theo:
+    @Html.ActionLink("Tên tăng dần", "Index", new
+    {
+        sortOrder = "name_asc",
+        SearchTerm = Model.SearchTerm // Persist search term
+    }) |
+    @Html.ActionLink("Tên giảm dần", "Index", new
+    {
+        sortOrder = "name_desc",
+        SearchTerm = Model.SearchTerm
+    }) |
+    @Html.ActionLink("Giá tăng dần", "Index", new
+    {
+        sortOrder = "price_asc",
+        SearchTerm = Model.SearchTerm
+    }) |
+    @Html.ActionLink("Giá giảm dần", "Index", new
+    {
+        sortOrder = "price_desc",
+        SearchTerm = Model.SearchTerm
+    })
+</div>
 
 @if (Model.Products != null && Model.Products.Any())
 {
@@ -47,6 +72,17 @@
             }
         </tbody>
     </table>
+    <div class="pagination-container">
+        @Html.PagedListPager(Model.Products, page => Url.Action("Index",
+            new
+                 {
+                page,
+                searchTerm = Model.SearchTerm,
+                minPrice = Model.MinPrice,
+                maxPrice = Model.MaxPrice,
+                sortOrder = Model.SortOrder
+            }))
+    </div>
 }
 else
 {

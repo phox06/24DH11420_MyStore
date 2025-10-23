@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using _24DH11420_LTTH_BE234.Models;
 using _24DH11420_LTTH_BE234.Models.ViewModel;
+using PagedList;
 
 namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 {
@@ -16,7 +17,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         private MyStoreEntities db = new MyStoreEntities();
 
         // GET: Admin/Products
-        public ActionResult Index(string searchTerm)
+        public ActionResult Index(string searchTerm ,decimal? minPrice, decimal? maxPrice, string sortOrder,int? page)
         {
             var model = new SearchProductVM();
             var products=db.Products.AsQueryable();
@@ -29,7 +30,37 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
                     p.Category.CategoryName.Contains(searchTerm));
 
             }
-            model.Products=products.ToList();
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.ProductPrice >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.ProductPrice <= maxPrice.Value);
+            }
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    products = products.OrderBy(p => p.ProductName);
+                    break;
+                case "name_desc":
+                    products = products.OrderByDescending(p => p.ProductName);
+                    break;
+                case "price_asc":
+                    products = products.OrderBy(p => p.ProductPrice);
+                    break;
+                case "price_desc":
+                    products = products.OrderByDescending(p => p.ProductPrice);
+                    break;
+
+                default:
+                    products = products.OrderBy(p => p.ProductName);
+                    break;
+            }
+            model.SortOrder = sortOrder;
+            int pageNumber = page ?? 1;
+            int pageSize = 2;
+            model.Products = products.ToPagedList(pageNumber, pageSize); 
             return View(model);
         }
 

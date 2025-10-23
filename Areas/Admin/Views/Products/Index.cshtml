@@ -23,10 +23,15 @@
     {
         <div class="form-group search-container">
             @Html.TextBoxFor(m => m.SearchTerm, new { @class = "form-control", placeholder = "Nhập tên sản phẩm cần tìm" })
+            @Html.TextBoxFor(m => m.MinPrice, new { @class = "form-control", placeholder = "Nhập giá tối thiểu", type = "number" })
+            @Html.TextBoxFor(m => m.MaxPrice, new { @class = "form-control", placeholder = "Nhập giá tối đa", type = "number" })
+
+
 
             }
 
             <button type="submit" class="btn btn-primary" style="margin-left:10px">Tìm kiếm</button>
+
         </div>
     }
     @Html.Partial("PVListProduct", Model)
