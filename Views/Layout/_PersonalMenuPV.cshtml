@@ -1,0 +1,39 @@
+﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.PersonalMenuVM
+<ul class="navbar-nav navbar-right">
+    <li class="nav-item">
+        @Html.ActionLink("Trang chủ", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+    </li>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccount" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @if (Model.IsLoggedIn)
+            {
+                <text>Hello, @Model.Username</text>
+            }
+            else
+            {
+                <text>Tài khoản</text>
+            }
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdownAccount">
+            @if (Model.IsLoggedIn)
+            {
+                <li>@Html.ActionLink("Thông tin tài khoản", "ProfileInfo", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink("Lịch sử mua hàng", "OrderHistory", "Order", new { area = "" }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink("Đăng xuất", "Logout", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
+            }
+            else
+            {
+                <li>@Html.ActionLink("Đăng ký", "Register", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink("Đăng nhập", "Login", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
+            }
+        </ul>
+    </li>
+
+    <li class="nav-item">
+        <a href="@Url.Action("Index", "Cart")" class="nav-link">
+            Giỏ hàng
+            <span class="badge bg-danger" id="cart-count">@Model.CartCount</span>
+        </a>
+    </li>
+</ul>

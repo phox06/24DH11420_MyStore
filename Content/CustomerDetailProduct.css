@@ -1,0 +1,31 @@
+﻿/* CSS được trích từ slide 700 */
+.pro {
+    padding: 50px 10px 50px 10px;
+    background-color: ghostwhite;
+}
+
+.pro-section {
+    background-color: white;
+    border: 1px groove #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0; /* Thêm khoảng cách trên di động */
+}
+
+    .pro-section.img {
+        max-height: 250px;
+        max-width: 250px;
+        padding: 5px;
+        width: 100%; /* Thích ứng với di động */
+        object-fit: contain;
+    }
+
+.pro-price {
+    font-weight: bolder;
+    font-size: larger;
+    color: red;
+}
+
+.pro-sale {
+    font-weight: lighter;
+}

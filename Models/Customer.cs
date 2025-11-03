@@ -27,8 +27,8 @@ namespace _24DH11420_LTTH_BE234.Models
         public string CustomerAddress { get; set; }
         public string Username { get; set; }
     
+        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual User User { get; set; }
     }
 }

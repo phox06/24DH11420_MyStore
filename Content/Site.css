@@ -1,20 +1,169 @@
-﻿/* Set padding to keep content from hitting the edges */
-.body-content {
-    margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+﻿/*Style cho phần BANNER*/
+.banner {
+    background-image: url('../../images/banner.jpg'); /* Đảm bảo bạn có ảnh này trong Content/images/banner.jpg */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+.banner-container {
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3); /* Lớp phủ mờ để đọc chữ */
+    padding: 20px;
+    border-radius: 10px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+    .banner-container h2 {
+        font-size: 2.5rem;
+    }
+
+    .banner-container p {
+        font-size: 1.2rem;
+    }
+
+.btnBanner {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: darkorange;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
 }
+
+/*Style cho phần SEARCH*/
+.searchProd {
+    text-align: center;
+    padding: 20px 0;
+}
+
+    .searchProd h2 {
+        font-size: 2rem;
+        color: brown;
+        margin-bottom: 20px;
+    }
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-input {
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #808080;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: brown;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+    .search-button:hover {
+        background-color: #555;
+    }
+
+/* Style chung cho các mục sản phẩm */
+.prodInfo p {
+    margin: 2px 0;
+    padding: 0 5px;
+}
+
+.prodPrice {
+    font-size: large;
+    color: blue;
+    font-weight: bolder;
+}
+
+.prodName {
+    color: black;
+    font-weight: bold;
+}
+
+.prodCate {
+    color: black;
+}
+
+.prodSale {
+    font-size: small;
+    color: dimgrey;
+}
+
+
+/*Style của FEATURE PRODUCT*/
+.featureProd {
+    text-align: left;
+}
+
+    .featureProd h2, .listProduct h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: brown;
+        text-align: center;
+    }
+
+.feature-container {
+    display: flex;
+    overflow-x: auto; /* Cho phép cuộn ngang */
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+    padding-bottom: 10px;
+}
+
+.fproduct-item {
+    border: 1px groove #808080;
+    border-radius: 10px;
+    width: 160px; /* Chiều rộng cố định cho slider */
+    max-height: 400px;
+    flex: 0 0 auto; /* Để các sản phẩm không bị giãn */
+    scroll-snap-align: start;
+    background-color: white;
+}
+
+    .fproduct-item img {
+        width: 100%;
+        max-height: 160px;
+        object-fit: contain;
+        padding: 5px;
+        background-color: transparent;
+    }
+
+/*Style của LIST PRODUCT*/
+.listProduct {
+    text-align: left;
+}
+
+.list-container {
+    list-style-type: none;
+    display: grid;
+    /* Hiển thị tự động 1fr cho mỗi cột, tối thiểu 180px */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.lproduct-item {
+    max-height: 500px; /* Điều chỉnh nếu cần */
+    border: 1px groove #808080;
+    border-radius: 10px;
+    background-color: white;
+}
+
+    .lproduct-item img {
+        width: 100%;
+        max-height: 180px; /* Điều chỉnh nếu cần */
+        object-fit: contain;
+        padding: 5px;
+        background-color: transparent;
+    }

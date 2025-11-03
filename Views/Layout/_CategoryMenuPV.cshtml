@@ -1,0 +1,9 @@
+﻿@model IEnumerable<_24DH11420_LTTH_BE234.Models.Category>
+<ul class="dropdown-menu">
+    @foreach (var item in Model)
+    {
+        <li>
+            @Html.ActionLink(item.CategoryName, "ProductList", "Home", new { categoryId = item.CategoryID }, new { @class = "dropdown-item" })
+        </li>
+    }
+</ul>

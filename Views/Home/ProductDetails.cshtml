@@ -1,0 +1,60 @@
+﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.ProductDetailVM
+@{
+    ViewBag.Title = "ProductDetails";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+<link href="~/Content/Site.css" rel="stylesheet" />
+<link href="~/Content/CustomerDetailProduct.css" rel="stylesheet" />
+<div class="container-fluid pro">
+    <div class="row">
+        <div class="col-md-4 pro-section">
+            <img src="@Url.Content(Model.Product.ProductImage)" class="pro-section img" />
+        </div>
+
+        <div class="col-md-5 pro-section">
+            <div>
+                <h4>@Html.DisplayFor(model => model.Product.ProductName)</h4>
+                <p class="pro-sale">Đã bán: @Html.DisplayFor(model => model.Product.OrderDetails.Count)</p>
+                <p class="pro-price">@string.Format("{0:N0}", Model.Product.ProductPrice) ₫</p>
+                <p>Túi sách: @Html.DisplayFor(model => model.Product.Category.CategoryName)</p>
+                <hr />
+                <h5>Mô tả</h5>
+                <p>@Html.DisplayFor(model => model.Product.ProductDescription)</p>
+            </div>
+            <hr />
+
+            <div class="form-group">
+                @using (Html.BeginForm("ProductDetails", "Home", FormMethod.Get))
+                {
+                    // Truyền lại ID sản phẩm
+                    @Html.HiddenFor(model => model.Product.ProductID, new { @Name = "id" })
+
+                    <h4>Số lượng</h4>
+                    <p>
+                        @Html.TextBoxFor(model => model.quantity, new { @class = "form-control", type = "number", min = 1 })
+                    </p>
+
+                    <h4 class="mt-3">Tạm tính</h4>
+                    <p class="pro-price">@string.Format("{0:N0}", Model.estimatedValue) ₫</p>
+
+                    <input type="submit" value="Cập nhật số lượng" class="btn btn-secondary" />
+
+                    @Html.ActionLink("Thêm vào giỏ hàng", "AddToCart", "Cart",
+                        new { id = Model.Product.ProductID, quantity = Model.quantity },
+                        new { @class = "btn btn-info" })
+                }
+            </div>
+        </div>
+
+        <div class="col-md-3 pro-section">
+            <div class="mb-4">
+                @Html.Partial("_PVRelatedProduct", Model)
+            </div>
+            <hr />
+            <div>
+                @Html.Partial("_PVTopProduct", Model)
+            </div>
+        </div>
+    </div>
+</div>
+

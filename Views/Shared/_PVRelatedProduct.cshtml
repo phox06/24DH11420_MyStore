@@ -1,0 +1,23 @@
+﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.ProductDetailVM
+@using PagedList.Mvc;
+
+@if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+{
+    <section class="container-fluid featureProd">
+        <h4 style="font-weight:bold;">Sản phẩm tương tự</h4>
+        <ul class="feature-container">
+            @foreach (var product in Model.RelatedProducts)
+            {
+                <li class="fproduct-item">
+                    <a href="@Url.Action("ProductDetails", "Home", new { id = product.ProductID })">
+                        <img src="@Url.Content(product.ProductImage)" />
+                    </a>
+                    <div class="prodInfo">
+                        <h5 class="prodName">@Html.DisplayFor(modelItem => product.ProductName)</h5>
+                        <p class="prodSale">@Html.DisplayFor(modelItem => product.ProductPrice)</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    </section>
+}

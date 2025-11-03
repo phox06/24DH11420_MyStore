@@ -1,0 +1,94 @@
+﻿@model _24DH11420_LTTH_BE234.Models.ViewModel.CheckoutVM
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<script>function enableAddressEdit() {
+        document.getElementById("ShippingAddress").removeAttribute("readonly");
+        document.getElementById("newAddressGroup").style.display = "block";
+    }
+
+    function updateShippingAddress() {
+        var newAddress = document.getElementById("newShippingAddress").value;
+        if (newAddress) {
+            document.getElementById("ShippingAddress").value = newAddress;
+        }
+        // Hàm này chỉ cập nhật giá trị, form sẽ submit bình thường
+    }</script>
+
+<h2>ĐẶT HÀNG</h2>
+
+@using (Html.BeginForm("Checkout", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-7">
+            <h3>Hình thức giao hàng</h3>
+            <div class="form-group">
+                @Html.RadioButtonFor(m => m.DeliveryMethod, "Giao hàng nhanh") Giao hàng nhanh<br />
+                @Html.RadioButtonFor(m => m.DeliveryMethod, "Giao hàng tiết kiệm") Giao hàng tiết kiệm<br />
+                @Html.ValidationMessageFor(m => m.DeliveryMethod, "", new { @class = "text-danger" })
+            </div>
+
+            <h3 class="mt-4">Hình thức thanh toán</h3>
+            <div class="form-group">
+                @Html.RadioButtonFor(m => m.PaymentMethod, "Tiền mặt") Tiền mặt<br />
+                @Html.RadioButtonFor(m => m.PaymentMethod, "Paypal") Paypal<br />
+                @Html.RadioButtonFor(m => m.PaymentMethod, "Mua trước trả sau") Mua trước trả sau<br />
+                @Html.ValidationMessageFor(m => m.PaymentMethod, "", new { @class = "text-danger" })
+            </div>
+
+            <h3 class="mt-4">Giao tới</h3>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ShippingAddress, new { @class = "control-label" })
+                <div classclass="input-group">
+                    @Html.TextBoxFor(m => m.ShippingAddress, new { @class = "form-control", @readonly = "readonly" })
+                    <button type="button" class="btn btn-link" onclick="enableAddressEdit()">Chỉnh sửa</button>
+                </div>
+                @Html.ValidationMessageFor(m => m.ShippingAddress, "", new { @class = "text-danger" })
+            </div>
+            <div id="newAddressGroup" class="form-group mt-2" style="display:none;">
+                @Html.Label("Địa chỉ mới", new { @class = "control-label" })
+                <input type="text" id="newShippingAddress" class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-md-5" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px;">
+            <h3>Thông tin đơn hàng</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Quantity</td>
+                            <td>@string.Format("{0:N0}", item.TotalPrice) ₫</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <hr />
+            <div class="form-group">
+                @Html.LabelFor(m => m.TotalAmount, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.TotalAmount, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Đặt hàng" class="btn btn-danger w-100" onclick="updateShippingAddress()" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
