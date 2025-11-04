@@ -1,0 +1,57 @@
+﻿@model _24DH11420_LTTH_BE234.Models.Customer
+
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <h4>Thông tin cá nhân</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CustomerName)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CustomerEmail)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CustomerEmail)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CustomerPhone)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CustomerPhone)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CustomerAddress)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CustomerAddress)
+            </dd>
+
+            <dt class="col-sm-3">
+                Tên đăng nhập
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <h4>Bảo mật</h4>
+        <hr />
+        <a href="#" class="btn btn-primary disabled">Chỉnh sửa thông tin</a>
+        <a href="#" class="btn btn-secondary disabled">Đổi mật khẩu</a>
+    </div>
+</div>

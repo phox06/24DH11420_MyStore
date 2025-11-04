@@ -1,0 +1,65 @@
+﻿@model IEnumerable<_24DH11420_LTTH_BE234.Models.Order>
+
+@{
+    ViewBag.Title = "MyOrder";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.Any())
+{
+    foreach (var order in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>Mã đơn hàng:</strong> @order.OrderID
+                    </div>
+                    <div>
+                        <strong>Ngày đặt:</strong> @order.OrderDate.ToShortDateString()
+                    </div>
+                    <div>
+                        <strong>Trạng thái:</strong> @order.PaymentStatus
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th class="text-end">Đơn giá</th>
+                            <th class="text-end">Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.OrderDetails)
+                        {
+                            <tr>
+                                <td>@(item.Product != null ? item.Product.ProductName : "Sản phẩm đã bị xóa")</td>
+                                <td>@item.Quantity</td>
+                                <td class="text-end">@string.Format("{0:N0}", item.UnitPrice) ₫</td>
+                                <td class="text-end">@string.Format("{0:N0}", item.TotalPrice) ₫</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-end">
+                <strong>Tổng cộng: <span class="text-danger">@string.Format("{0:N0}", order.TotalAmount) ₫</span></strong>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Bạn chưa có đơn hàng nào.</p>
+}

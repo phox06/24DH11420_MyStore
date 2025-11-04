@@ -59,6 +59,34 @@ namespace _24DH11420_LTTH_BE234.Controllers
 
             return View(model);
         }
+        [Authorize] // Bắt buộc người dùng phải đăng nhập
+        public ActionResult MyOrder()
+        {
+            // Lấy thông tin người dùng đang đăng nhập
+            var user = db.Users.SingleOrDefault(u => u.Username == User.Identity.Name);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Tìm khách hàng tương ứng
+            var customer = db.Customers.SingleOrDefault(c => c.Username == user.Username);
+            if (customer == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Lấy tất cả đơn hàng của khách hàng này
+            // Sắp xếp theo ngày mới nhất
+            // Bao gồm cả Chi tiết đơn hàng (OrderDetails) và Sản phẩm (Product) liên quan
+            var orders = db.Orders
+                .Where(o => o.CustomerID == customer.CustomerID)
+                .Include(o => o.OrderDetails.Select(d => d.Product)) // Tải thông tin Sản phẩm
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+
+            return View(orders);
+        }
         // POST: Order/Checkout
         [HttpPost]
         [Authorize]

@@ -1,4 +1,4 @@
-﻿@model _24DH11420_LTTH_BE234.Models.Order;
+﻿@model _24DH11420_LTTH_BE234.Models.Order
 
 @{
     ViewBag.Title = "OrderSuccess";
@@ -16,7 +16,7 @@
         <p><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToShortDateString()</p>
         <p><strong>Tổng số tiền:</strong> @string.Format("{0:N0}", Model.TotalAmount) ₫</p>
         <p><strong>Trạng thái thanh toán:</strong> @Model.PaymentStatus</p>
-        <p><strong>Phương thức giao hàng:</strong> @Model.ShippingMethod</p>
+        <p><strong>Phương thức giao hàng:</strong> @Model.DeliveryMethod</p>
         <p><strong>Địa chỉ giao hàng:</strong> @Model.ShippingAddress</p>
         <hr />
 

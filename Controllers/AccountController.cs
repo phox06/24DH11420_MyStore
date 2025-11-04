@@ -30,10 +30,12 @@ namespace _24DH11420_LTTH_BE234.Controllers
                     ModelState.AddModelError("Username", "Tên đăng nhập này đã tồn tại!");
                     return View(model);
                 }
+
+                // 1. Tạo bản ghi User
                 var user = new User
                 {
                     Username = model.Username,
-                    Password = model.Password, // Nên mã hóa mật khẩu trong dự án thực tế
+                    Password = model.Password,
                     UserRole = "Customer"
                 };
                 db.Users.Add(user);
@@ -49,18 +51,52 @@ namespace _24DH11420_LTTH_BE234.Controllers
                 };
                 db.Customers.Add(customer);
 
-                // 3. Lưu cả hai vào CSDL
-                db.SaveChanges();
+                // 3. Bọc SaveChanges() trong try-catch để bắt lỗi validation
+                try
+                {
+                    db.SaveChanges(); // <-- LỖI XẢY RA Ở ĐÂY
 
-                // 4. Tự động đăng nhập người dùng sau khi đăng ký
-                FormsAuthentication.SetAuthCookie(model.Username, false);
+                    // 4. Tự động đăng nhập người dùng sau khi đăng ký
+                    FormsAuthentication.SetAuthCookie(model.Username, false);
 
-                // 5. Chuyển hướng về Trang chủ
-                return RedirectToAction("Index", "Home");
+                    // 5. Chuyển hướng về Trang chủ
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException dbEx)
+                {
+                    // Lấy tất cả các lỗi validation
+                    var errorMessages = dbEx.EntityValidationErrors
+                        .SelectMany(x => x.ValidationErrors)
+                        .Select(x => x.ErrorMessage);
+
+                    // Nối các lỗi lại thành một chuỗi
+                    var fullErrorMessage = string.Join("; ", errorMessages);
+
+                    // Tạo một chuỗi lỗi dễ đọc hơn
+                    var exceptionMessage = string.Concat("Lỗi validation: ", fullErrorMessage);
+
+                    // Ném lại lỗi với thông tin chi tiết hơn để dễ debug
+                    throw new System.Data.Entity.Validation.DbEntityValidationException(exceptionMessage, dbEx.EntityValidationErrors);
+                }
             }
 
             // Nếu có lỗi, hiển thị lại form
             return View(model);
+        }
+        [Authorize] // Bắt buộc người dùng phải đăng nhập
+        public ActionResult ProfileInfo()
+        {
+            // Lấy thông tin khách hàng từ CSDL
+            var customer = db.Customers.SingleOrDefault(c => c.Username == User.Identity.Name);
+
+            if (customer == null)
+            {
+                // Nếu không tìm thấy thông tin khách hàng (lỗi lạ), bắt đăng xuất
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Login");
+            }
+
+            return View(customer); // Truyền model Customer vào View
         }
         public ActionResult Login()
         {
