@@ -1,12 +1,12 @@
-﻿using System;
+﻿using _24DH11420_LTTH_BE234.Models;
+using _24DH11420_LTTH_BE234.Models.ViewModel;
+using System;
 using System.Collections.Generic;
-
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using _24DH11420_LTTH_BE234.Models;
-using _24DH11420_LTTH_BE234.Models.ViewModel;
-using System.Web.Security;    
+using System.Web.Security;   
+using System.Data.Entity;
 
 namespace _24DH11420_LTTH_BE234.Controllers
 {
@@ -132,6 +132,52 @@ namespace _24DH11420_LTTH_BE234.Controllers
             }
 
             return View(model);
+        }
+        [Authorize] // Bắt buộc người dùng phải đăng nhập
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ChangePasswordVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Nếu model không hợp lệ, hiển thị lại form
+                return View(model);
+            }
+
+            // Lấy thông tin người dùng từ CSDL
+            var user = db.Users.SingleOrDefault(u => u.Username == User.Identity.Name);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Kiểm tra xem mật khẩu cũ có đúng không
+            if (user.Password != model.OldPassword)
+            {
+                ModelState.AddModelError("OldPassword", "Mật khẩu cũ không chính xác.");
+                return View(model);
+            }
+
+            // Cập nhật mật khẩu mới
+            // (Trong một dự án thực tế, bạn nên mã hóa (hash) mật khẩu này trước khi lưu)
+            user.Password = model.NewPassword;
+
+            // Đánh dấu là đã sửa đổi
+            db.Entry(user).State = EntityState.Modified;
+
+            // Lưu thay đổi
+            db.SaveChanges();
+
+            // Gửi một thông báo thành công tạm thời
+            TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
+
+            // Chuyển hướng về trang thông tin tài khoản
+            return RedirectToAction("ProfileInfo");
         }
         // GET: Account/Logout
         public ActionResult Logout()

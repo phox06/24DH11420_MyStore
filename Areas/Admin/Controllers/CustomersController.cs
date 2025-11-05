@@ -1,0 +1,160 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using _24DH11420_LTTH_BE234.Models;
+using PagedList;
+
+
+namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
+{
+    public class CustomersController : BaseController
+    {
+        private MyStoreEntities db = new MyStoreEntities();
+
+        // GET: Admin/Customers
+        public ActionResult Index(string searchTerm, int? page)
+        {
+            int pageSize = 10; // 10 khách hàng mỗi trang
+            int pageNumber = (page ?? 1);
+
+            // Bắt đầu truy vấn, bao gồm cả thông tin User (để lấy Username)
+            var customers = db.Customers.Include(c => c.User).AsQueryable();
+
+            // Xử lý tìm kiếm
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                customers = customers.Where(c => c.CustomerName.Contains(searchTerm) ||
+                                                  c.CustomerEmail.Contains(searchTerm) ||
+                                                  c.Username.Contains(searchTerm));
+            }
+
+            // Sắp xếp (ví dụ: theo tên) và phân trang
+            var pagedCustomers = customers.OrderBy(c => c.CustomerName)
+                                            .ToPagedList(pageNumber, pageSize);
+
+            // Gửi searchTerm lại cho View để giữ giá trị trong ô tìm kiếm
+            ViewBag.SearchTerm = searchTerm;
+
+            return View(pagedCustomers);
+        }
+
+        // GET: Admin/Customers/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Tải thông tin Customer, VÀ tải cả danh sách Orders liên quan
+            Customer customer = db.Customers
+                                   .Include(c => c.User)
+                                   .Include(c => c.Orders)
+                                   .SingleOrDefault(c => c.CustomerID == id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customer);
+        }
+
+        // GET: Admin/Customers/Create
+        public ActionResult Create()
+        {
+            ViewBag.Username = new SelectList(db.Users, "Username", "Password");
+            return View();
+        }
+
+        // POST: Admin/Customers/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "CustomerID,CustomerName,CustomerPhone,CustomerEmail,CustomerAddress,Username")] Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Customers.Add(customer);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Username = new SelectList(db.Users, "Username", "Password", customer.Username);
+            return View(customer);
+        }
+
+        // GET: Admin/Customers/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Customer customer = db.Customers.Find(id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Username = new SelectList(db.Users, "Username", "Password", customer.Username);
+            return View(customer);
+        }
+
+        // POST: Admin/Customers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "CustomerID,CustomerName,CustomerPhone,CustomerEmail,CustomerAddress,Username")] Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(customer).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.Username = new SelectList(db.Users, "Username", "Password", customer.Username);
+            return View(customer);
+        }
+
+        // GET: Admin/Customers/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Customer customer = db.Customers.Find(id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customer);
+        }
+
+        // POST: Admin/Customers/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Customer customer = db.Customers.Find(id);
+            db.Customers.Remove(customer);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

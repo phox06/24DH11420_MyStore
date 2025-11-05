@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "FailureView";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="alert alert-danger text-center">
+    <h2>Thanh toán thất bại</h2>
+    <p>Đã có lỗi xảy ra trong quá trình thanh toán qua PayPal. Vui lòng thử lại.</p>
+    @Html.ActionLink("Quay lại giỏ hàng", "Index", "Cart", null, new { @class = "btn btn-danger" })
+</div>
+

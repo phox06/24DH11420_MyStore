@@ -88,6 +88,7 @@ namespace _24DH11420_LTTH_BE234.Controllers
             return View(orders);
         }
         // POST: Order/Checkout
+        // POST: Order/Checkout
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -97,14 +98,28 @@ namespace _24DH11420_LTTH_BE234.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Nếu model không hợp lệ (ví dụ: chưa chọn phương thức thanh toán),
-                // gửi lại CartItems (vì chúng không được post về)
+                // Nếu model không hợp lệ, gửi lại CartItems
                 model.CartItems = cart.Items.ToList();
                 return View(model);
             }
 
-            // Lấy thông tin khách hàng (chắc chắn tồn tại vì đã [Authorize])
+            // Lấy thông tin khách hàng
             var customer = db.Customers.SingleOrDefault(c => c.Username == User.Identity.Name);
+
+            // ==================================================================
+            // LOGIC MỚI: KIỂM TRA PHƯƠNG THỨC THANH TOÁN
+            // ==================================================================
+            if (model.PaymentMethod == "Paypal")
+            {
+                // Nếu là Paypal, lưu model checkout vào Session để PaypalController lấy
+                // và chuyển hướng đến PaypalController
+                Session["CheckoutModel"] = model;
+                return RedirectToAction("PaymentWithPaypal", "Paypal");
+            }
+
+            // ==================================================================
+            // LOGIC CŨ: XỬ LÝ CHO CÁC PHƯƠNG THỨC KHÁC (ví dụ: Tiền mặt)
+            // ==================================================================
 
             // 1. Tạo đối tượng Order
             var order = new Order
@@ -115,41 +130,31 @@ namespace _24DH11420_LTTH_BE234.Controllers
                 PaymentMethod = model.PaymentMethod,
                 DeliveryMethod = model.DeliveryMethod,
                 ShippingAddress = model.ShippingAddress,
-                // Mặc định trạng thái thanh toán
                 PaymentStatus = "Chưa thanh toán"
             };
 
-            // Xử lý logic thanh toán
             if (model.PaymentMethod == "Tiền mặt")
             {
                 order.PaymentStatus = "Thanh toán tiền mặt";
             }
-            else if (model.PaymentMethod == "Paypal")
-            {
-                order.PaymentStatus = "Thanh toán Paypal";
-                // Tạm thời (Chuyển hướng đến Paypal sẽ được thêm ở bước sau)
-                // return RedirectToAction("PaymentWithPaypal", "Paypal", model);
-            }
 
-            // 2. Thêm Order vào CSDL để lấy OrderID
+            // 2. Thêm Order vào CSDL
             db.Orders.Add(order);
-            db.SaveChanges(); // <-- Quan trọng: Lưu để lấy OrderID
+            db.SaveChanges();
 
             // 3. Thêm các đối tượng OrderDetail
             foreach (var item in cart.Items)
             {
                 var orderDetail = new OrderDetail
                 {
-                    OrderID = order.OrderID, // Lấy ID của đơn hàng vừa tạo
+                    OrderID = order.OrderID,
                     ProductID = item.ProductID,
                     Quantity = item.Quantity,
                     UnitPrice = item.UnitPrice
-                    // TotalPrice sẽ được CSDL tự động tính
                 };
                 db.OrderDetails.Add(orderDetail);
             }
 
-            // 4. Lưu các thay đổi (OrderDetails)
             db.SaveChanges();
 
             // 5. Xóa giỏ hàng

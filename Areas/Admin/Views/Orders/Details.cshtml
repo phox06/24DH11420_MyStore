@@ -1,0 +1,85 @@
+﻿@model _24DH11420_LTTH_BE234.Models.Order
+
+@{
+    ViewBag.Title = "Chi Tiết Đơn Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/Admin_Layout.cshtml";
+}
+
+<h2 class="bg-success text-white p-2">@ViewBag.Title: #@Model.OrderID</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Thông tin Khách hàng</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">Tên Khách hàng</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Customer.CustomerName)</dd>
+
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Customer.CustomerEmail)</dd>
+
+            <dt class="col-sm-4">Số điện thoại</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Customer.CustomerPhone)</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h4>Thông tin Đơn hàng</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-4">Ngày Đặt</dt>
+            <dd class="col-sm-8">@Model.OrderDate.ToString("g")</dd>
+
+            <dt class="col-sm-4">Trạng thái TT</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.PaymentStatus)</dd>
+
+            <dt class="col-sm-4">Giao hàng</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.DeliveryMethod)</dd>
+
+            <dt class="col-sm-4">Địa chỉ Giao</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.ShippingAddress)</dd>
+        </dl>
+    </div>
+</div>
+
+<hr />
+
+<h4>Chi tiết Sản phẩm</h4>
+<table class="table">
+    <tr>
+        <th>Hình ảnh</th>
+        <th>Sản phẩm</th>
+        <th>Số lượng</th>
+        <th class="text-end">Đơn giá</th>
+        <th class="text-end">Thành tiền</th>
+    </tr>
+
+    @foreach (var item in Model.OrderDetails)
+    {
+        <tr>
+            <td>
+                <img src="@Url.Content(item.Product.ProductImage)" style="max-height: 50px; max-width: 50px;" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td class="text-end">
+                @string.Format("{0:N0}", item.UnitPrice) ₫
+            </td>
+            <td class="text-end">
+                @string.Format("{0:N0}", item.TotalPrice) ₫
+            </td>
+        </tr>
+    }
+    <tr class="table-info">
+        <td colspan="4" class="text-end"><strong>Tổng cộng</strong></td>
+        <td class="text-end"><strong>@string.Format("{0:N0}", Model.TotalAmount) ₫</strong></td>
+    </tr>
+</table>
+
+<p class="mt-3">
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.OrderID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Quay lại Danh sách", "Index", null, new { @class = "btn btn-secondary" })
+</p>

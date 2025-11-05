@@ -12,7 +12,7 @@ using PagedList;
 
 namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
         private MyStoreEntities db = new MyStoreEntities();
 

@@ -1,0 +1,67 @@
+﻿@model _24DH11420_LTTH_BE234.Models.Customer
+
+@{
+    ViewBag.Title = "Chi tiết Khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/Admin_Layout.cshtml";
+}
+
+<h2 class="bg-success text-white p-2">@ViewBag.Title: @Model.CustomerName</h2>
+
+<div>
+    <h4>Thông tin chi tiết</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Họ tên</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerName)</dd>
+
+        <dt>Số điện thoại</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerPhone)</dd>
+
+        <dt>Email</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerEmail)</dd>
+
+        <dt>Địa chỉ</dt>
+        <dd>@Html.DisplayFor(model => model.CustomerAddress)</dd>
+
+        <dt>Tên đăng nhập</dt>
+        <dd>@Html.DisplayFor(model => model.User.Username)</dd>
+    </dl>
+</div>
+
+<hr />
+
+<h4>Danh sách đơn hàng (Tổng: @Model.Orders.Count())</h4>
+@if (Model.Orders.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th>Mã Đơn</th>
+            <th>Ngày Đặt</th>
+            <th>Tổng Tiền</th>
+            <th>Trạng thái</th>
+            <th></th>
+        </tr>
+        @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+        {
+            <tr>
+                <td>@order.OrderID</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@string.Format("{0:N0}", order.TotalAmount) ₫</td>
+                <td>@order.PaymentStatus</td>
+                <td>
+                    @* Chúng ta sẽ tạo link này ở bước tiếp theo *@
+                    @Html.ActionLink("Xem chi tiết", "Details", "Orders", new { id = order.OrderID }, new { @class = "btn btn-info btn-sm" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>Khách hàng này chưa có đơn hàng nào.</p>
+}
+
+<p class="mt-3">
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.CustomerID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Quay lại Danh sách", "Index", null, new { @class = "btn btn-secondary" })
+</p>
