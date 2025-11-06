@@ -9,36 +9,36 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
-    // 1. Tải thư viện
+    
     google.charts.load('current', { 'packages': ['corechart'] });
 
-    // 2. Đặt callback function khi thư viện đã sẵn sàng
+    
     google.charts.setOnLoadCallback(drawChart);
 
-    // 3. Hàm vẽ biểu đồ
+  
     function drawChart() {
 
-        // 4. Tạo bảng dữ liệu (Data Table) từ dữ liệu ViewBag
+        
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Category');
         data.addColumn('number', 'ProductCount');
 
-        // Lấy dữ liệu JSON từ ViewBag
+        
         var chartData = @ViewBag.ChartData;
 
-        // Thêm dữ liệu vào bảng
+        
         for (var i = 0; i < chartData.length; i++) {
             data.addRow([chartData[i].CategoryName, chartData[i].ProductCount]);
         }
 
-        // 5. Cấu hình các tùy chọn cho biểu đồ
+        
         var options = {
             title: 'Tỷ lệ hàng hóa',
             is3D: true,
             pieHole: 0.4,
         };
 
-        // 6. Khởi tạo và vẽ biểu đồ
+        
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
     }

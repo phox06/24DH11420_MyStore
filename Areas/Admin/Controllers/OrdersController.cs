@@ -18,24 +18,24 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         // GET: Admin/Orders
         public ActionResult Index(string searchTerm, int? page)
         {
-            int pageSize = 10; // 10 đơn hàng mỗi trang
+            int pageSize = 10; 
             int pageNumber = (page ?? 1);
 
-            // Bắt đầu truy vấn, bao gồm cả thông tin Customer
+            
             var orders = db.Orders.Include(o => o.Customer).AsQueryable();
 
-            // Xử lý tìm kiếm (ví dụ: tìm theo Tên khách hàng hoặc Trạng thái thanh toán)
+           
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 orders = orders.Where(o => o.Customer.CustomerName.Contains(searchTerm) ||
                                            o.PaymentStatus.Contains(searchTerm));
             }
 
-            // Sắp xếp (theo ngày mới nhất) và phân trang
+            
             var pagedOrders = orders.OrderByDescending(o => o.OrderDate)
                                     .ToPagedList(pageNumber, pageSize);
 
-            // Gửi searchTerm lại cho View để giữ giá trị trong ô tìm kiếm
+            
             ViewBag.SearchTerm = searchTerm;
 
             return View(pagedOrders);
@@ -49,7 +49,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Tải đơn hàng VÀ chi tiết đơn hàng VÀ sản phẩm trong chi tiết VÀ khách hàng
+            
             Order order = db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.OrderDetails.Select(d => d.Product))

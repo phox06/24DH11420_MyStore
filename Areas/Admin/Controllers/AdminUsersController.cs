@@ -15,7 +15,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         // GET: Admin/AdminUsers
         public ActionResult Index()
         {
-            // Chỉ hiển thị các User có vai trò là "Admin"
+            
             var adminUsers = db.Users.Where(u => u.UserRole == "Admin").ToList();
             return View(adminUsers);
         }
@@ -27,7 +27,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            // Chỉ tìm User là "Admin" và có Username khớp
+            
             User user = db.Users.SingleOrDefault(u => u.Username == id && u.UserRole == "Admin");
             if (user == null)
             {
@@ -81,7 +81,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // ĐẢM BẢO VAI TRÒ LUÔN LÀ "Admin"
+                
                 user.UserRole = "Admin";
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
