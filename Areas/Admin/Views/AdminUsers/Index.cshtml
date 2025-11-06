@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<_24DH11420_LTTH_BE234.Models.User>
 
 @{
-    Layout = null;
+    Layout = "~/Areas/Admin/Views/Shared/Admin_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -25,23 +25,24 @@
             </th>
             <th></th>
         </tr>
-    
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserRole)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Username }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Username }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Username })
-            </td>
-        </tr>
-    }
-    
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserRole)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Username }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Username }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Username })
+                </td>
+            </tr>
+        }
+
     </table>
 </body>
 </html>

@@ -27,11 +27,15 @@
                     <li class="nav-item">
                         @Html.ActionLink("Tài khoản Admin", "Index", "AdminUsers", new { area = "Admin" }, new { @class = "nav-link" })
                     </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Danh Mục Sản Phẩm", "Index", "Categories", new { area = "Admin" }, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Sản Phẩm", "Index", "Products", new { area = "Admin" }, new { @class = "nav-link" })
 
                     <li class="nav-item">
                         @Html.ActionLink("Đăng xuất", "Logout", "Home", new { area = "Admin" }, new { @class = "nav-link" })
                     </li>
-
 
                 </ul>
             </div>
