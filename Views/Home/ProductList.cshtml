@@ -1,0 +1,44 @@
+﻿@model PagedList.IPagedList<_24DH11420_LTTH_BE234.Models.Product>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="container-fluid listProduct">
+    <h2 class="text-center">@ViewBag.CategoryName</h2>
+    <hr />
+
+    @if (Model.Any())
+    {
+        <ul class="list-container">
+            @foreach (var product in Model)
+            {
+                <li class="lproduct-item">
+                    <a href="@Url.Action("ProductDetails", "Home", new { id = product.ProductID })">
+                        <img src="@Url.Content(product.ProductImage)" alt="@product.ProductName" />
+                    </a>
+                    <div class="prodInfo">
+                        <p class="prodPrice">@string.Format("{0:N0}", product.ProductPrice) ₫</p>
+                        <p class="prodName">@Html.DisplayFor(modelItem => product.ProductName)</p>
+                        <p class="prodSale">Đã bán: @Html.DisplayFor(modelItem => product.OrderDetails.Count)</p>
+                    </div>
+                </li>
+            }
+        </ul>
+
+        <div class="pagination-container d-flex justify-content-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("ProductList",
+                new { page, categoryId = Model.FirstOrDefault()?.CategoryID }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new List<string> { "page-item" },
+                    UlElementClasses = new List<string> { "pagination" }
+                })
+        </div>
+    }
+    else
+    {
+        <p class="text-center">Không có sản phẩm nào trong danh mục này.</p>
+    }
+</div>

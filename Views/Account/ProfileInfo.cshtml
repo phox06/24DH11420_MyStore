@@ -6,6 +6,7 @@
 }
 
 <h2>@ViewBag.Title</h2>
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -13,51 +14,55 @@
     </div>
 }
 
-<div class="row">
+<div class="row mt-4">
+
     <div class="col-md-8">
         <h4>Thông tin cá nhân</h4>
         <hr />
-        <dl class="row">
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.CustomerName)
-            </dt>
-            <dd class="col-sm-9">
+
+        <div class="row mb-3">
+            <strong class="col-sm-3">Họ và tên</strong>
+            <div class="col-sm-9">
                 @Html.DisplayFor(model => model.CustomerName)
-            </dd>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.CustomerEmail)
-            </dt>
-            <dd class="col-sm-9">
+        <div class="row mb-3">
+            <strong class="col-sm-3">Địa chỉ Email</strong>
+            <div class="col-sm-9">
                 @Html.DisplayFor(model => model.CustomerEmail)
-            </dd>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.CustomerPhone)
-            </dt>
-            <dd class="col-sm-9">
+        <div class="row mb-3">
+            <strong class="col-sm-3">Số điện thoại</strong>
+            <div class="col-sm-9">
                 @Html.DisplayFor(model => model.CustomerPhone)
-            </dd>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">
-                @Html.DisplayNameFor(model => model.CustomerAddress)
-            </dt>
-            <dd class="col-sm-9">
+        <div class="row mb-3">
+            <strong class="col-sm-3">Địa chỉ</strong>
+            <div class="col-sm-9">
                 @Html.DisplayFor(model => model.CustomerAddress)
-            </dd>
+            </div>
+        </div>
 
-            <dt class="col-sm-3">
-                Tên đăng nhập
-            </dt>
-            <dd class="col-sm-9">
+        <div class="row mb-3">
+            <strong class="col-sm-3">Tên đăng nhập</strong>
+            <div class="col-sm-9">
                 @Html.DisplayFor(model => model.Username)
-            </dd>
-        </dl>
+            </div>
+        </div>
     </div>
+
     <div class="col-md-4">
         <h4>Bảo mật</h4>
         <hr />
-        <a href="#" class="btn btn-primary disabled">Chỉnh sửa thông tin</a>
-        <a href="#" class="btn btn-secondary disabled">Đổi mật khẩu</a>
+
+        <div class="d-grid gap-2">
+            @Html.ActionLink("Chỉnh sửa thông tin", "UpdateProfile", "Account", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Đổi mật khẩu", "ChangePassword", "Account", null, new { @class = "btn btn-secondary" })
+        </div>
     </div>
 </div>

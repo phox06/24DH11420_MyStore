@@ -98,6 +98,65 @@ namespace _24DH11420_LTTH_BE234.Controllers
 
             return View(customer); // Truyền model Customer vào View
         }
+        [Authorize] // Bắt buộc người dùng phải đăng nhập
+        public ActionResult UpdateProfile()
+        {
+            // Lấy thông tin khách hàng hiện tại
+            var customer = db.Customers.SingleOrDefault(c => c.Username == User.Identity.Name);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Tạo ViewModel và điền thông tin
+            var model = new UpdateProfileVM
+            {
+                CustomerName = customer.CustomerName,
+                CustomerEmail = customer.CustomerEmail,
+                CustomerPhone = customer.CustomerPhone,
+                CustomerAddress = customer.CustomerAddress
+            };
+
+            return View(model);
+        }
+
+        // POST: Account/UpdateProfile
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateProfile(UpdateProfileVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Nếu model không hợp lệ, hiển thị lại form
+                return View(model);
+            }
+
+            // Lấy thông tin khách hàng từ CSDL
+            var customer = db.Customers.SingleOrDefault(c => c.Username == User.Identity.Name);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Cập nhật thông tin khách hàng từ ViewModel
+            customer.CustomerName = model.CustomerName;
+            customer.CustomerEmail = model.CustomerEmail;
+            customer.CustomerPhone = model.CustomerPhone;
+            customer.CustomerAddress = model.CustomerAddress;
+
+            // Đánh dấu là đã sửa đổi
+            db.Entry(customer).State = EntityState.Modified;
+
+            // Lưu thay đổi
+            db.SaveChanges();
+
+            // Gửi thông báo thành công
+            TempData["SuccessMessage"] = "Cập nhật thông tin thành công!";
+
+            // Chuyển hướng về trang thông tin tài khoản
+            return RedirectToAction("ProfileInfo");
+        }
         public ActionResult Login()
         {
             return View();
@@ -191,6 +250,7 @@ namespace _24DH11420_LTTH_BE234.Controllers
             // Chuyển hướng về Trang chủ
             return RedirectToAction("Index", "Home");
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -199,6 +259,7 @@ namespace _24DH11420_LTTH_BE234.Controllers
             }
             base.Dispose(disposing);
         }
+
 
         // GET: Account
         public ActionResult Index()

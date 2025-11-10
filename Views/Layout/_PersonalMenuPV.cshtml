@@ -19,7 +19,7 @@
             @if (Model.IsLoggedIn)
             {
                 <li>@Html.ActionLink("Thông tin tài khoản", "ProfileInfo", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
-                <li>@Html.ActionLink("Lịch sử mua hàng", "OrderHistory", "Order", new { area = "" }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink("Lịch sử mua hàng", "MyOrder", "Order", new { area = "" }, new { @class = "dropdown-item" })</li>
                 <li>@Html.ActionLink("Đăng xuất", "Logout", "Account", new { area = "" }, new { @class = "dropdown-item" })</li>
             }
             else

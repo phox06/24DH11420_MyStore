@@ -1,13 +1,20 @@
 ﻿.banner {
-    background-image: url('../../images/banner.jpg'); 
+    background-image: url('/Content/Images/banner.png');
     background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 300px;
 }
+.banner-class {
+ 
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+}
 
 .banner-container {
+   
     text-align: center;
     color: white;
     background-color: rgba(0, 0, 0, 0.3);
