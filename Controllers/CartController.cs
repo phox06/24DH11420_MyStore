@@ -42,7 +42,7 @@ namespace _24DH11420_LTTH_BE234.Controllers
                 product.Category.CategoryName
             );
 
-            // Quay lại trang chi tiết sản phẩm
+            
             return RedirectToAction("ProductDetails", "Home", new { id = id });
         }
         public ActionResult RemoveFromCart(int id)

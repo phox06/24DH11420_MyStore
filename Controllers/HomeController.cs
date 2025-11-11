@@ -90,31 +90,31 @@ namespace _24DH11420_LTTH_BE234.Controllers
         {
             if (categoryId == null)
             {
-                // Nếu không có ID danh mục, trả về lỗi
+                
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Tìm danh mục để hiển thị tên
+            
             var category = db.Categories.Find(categoryId);
             if (category == null)
             {
-                // Nếu ID danh mục không tồn tại, trả về 404
+                
                 return HttpNotFound();
             }
 
-            // Lưu tên danh mục để View có thể hiển thị
+            
             ViewBag.CategoryName = category.CategoryName;
 
-            // Cài đặt phân trang
-            int pageSize = 6; // 6 sản phẩm mỗi trang
+            
+            int pageSize = 6; 
             int pageNumber = (page ?? 1);
 
-            // Lấy tất cả sản phẩm thuộc danh mục này
+            
             var products = db.Products
                 .Where(p => p.CategoryID == categoryId)
-                .OrderBy(p => p.ProductName); // Sắp xếp theo tên
+                .OrderBy(p => p.ProductName); 
 
-            // Trả về một danh sách đã phân trang cho View
+            
             return View(products.ToPagedList(pageNumber, pageSize));
         }
         protected override void Dispose(bool disposing)
