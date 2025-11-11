@@ -19,13 +19,13 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         // GET: Admin/Customers
         public ActionResult Index(string searchTerm, int? page)
         {
-            int pageSize = 10; // 10 khách hàng mỗi trang
+            int pageSize = 10; 
             int pageNumber = (page ?? 1);
 
-            // Bắt đầu truy vấn, bao gồm cả thông tin User (để lấy Username)
+           
             var customers = db.Customers.Include(c => c.User).AsQueryable();
 
-            // Xử lý tìm kiếm
+            
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 customers = customers.Where(c => c.CustomerName.Contains(searchTerm) ||
@@ -33,11 +33,11 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
                                                   c.Username.Contains(searchTerm));
             }
 
-            // Sắp xếp (ví dụ: theo tên) và phân trang
+            
             var pagedCustomers = customers.OrderBy(c => c.CustomerName)
                                             .ToPagedList(pageNumber, pageSize);
 
-            // Gửi searchTerm lại cho View để giữ giá trị trong ô tìm kiếm
+           
             ViewBag.SearchTerm = searchTerm;
 
             return View(pagedCustomers);
@@ -51,7 +51,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Tải thông tin Customer, VÀ tải cả danh sách Orders liên quan
+            
             Customer customer = db.Customers
                                    .Include(c => c.User)
                                    .Include(c => c.Orders)

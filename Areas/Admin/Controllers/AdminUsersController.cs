@@ -49,7 +49,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // TỰ ĐỘNG GÁN VAI TRÒ "Admin"
+                
                 user.UserRole = "Admin";
                 db.Users.Add(user);
                 db.SaveChanges();
