@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using _24DH11420_LTTH_BE234.Models;
+﻿using _24DH11420_LTTH_BE234.Models;
 using _24DH11420_LTTH_BE234.Models.ViewModel;
-using System.Data.Entity;
 using PagedList;
-using PagedList.Mvc;
+using System.Data.Entity;
+using System.Linq;
 using System.Net;
+using System.Web.Mvc;
 
 
 namespace _24DH11420_LTTH_BE234.Controllers
@@ -16,30 +12,33 @@ namespace _24DH11420_LTTH_BE234.Controllers
     public class HomeController : Controller
     {
         private MyStoreEntities db = new MyStoreEntities();
-        public ActionResult Index(string searchTearm, int? page)
+        public ActionResult Index(string SearchTerm, int? page) // <-- 1. Renamed 'searchTearm'
         {
             var model = new HomeProductVM();
             int pageNumber = (page ?? 1);
             int pageSize = model.PageSize;
             var products = db.Products.Include(p => p.Category).AsQueryable();
-            if (!string.IsNullOrEmpty(searchTearm))
+            if (!string.IsNullOrEmpty(SearchTerm))
             {
-                model.SearchTerm = searchTearm;
-                products = products.Where(p => p.ProductName.Contains(searchTearm) ||
-                                               p.ProductDescription.Contains(searchTearm) ||
-                                               p.Category.CategoryName.Contains(searchTearm));
+                model.SearchTerm = SearchTerm;
+
+
+                products = products.Where(p => p.ProductName.Contains(SearchTerm) ||
+                                               p.ProductDescription.Contains(SearchTerm) ||
+                                               p.Category.CategoryName.Contains(SearchTerm));
             }
-            model.FeaturedProducts = db.Products
+            model.FeaturedProducts = products
                                    .OrderByDescending(p => p.OrderDetails.Count())
                                    .Take(10)
                                    .ToList();
+
+
             model.NewProducts = products
                               .OrderBy(p => p.OrderDetails.Count())
                               .Take(20)
                               .ToPagedList(pageNumber, pageSize);
 
             return View(model);
-           
         }
         public ActionResult ProductDetails(int? id, int? quantity, int? page)
         {
@@ -57,31 +56,31 @@ namespace _24DH11420_LTTH_BE234.Controllers
         .Where(p => p.CategoryID == pro.CategoryID && p.ProductID != pro.ProductID)
         .AsQueryable();
 
-            
+
             int pageNumber = (page ?? 1);
-            int pageSize = model.PageSize; 
-            
+            int pageSize = model.PageSize;
+
             model.Product = pro;
 
-            
-            model.RelatedProducts = products
-                .OrderBy(p => p.ProductID) 
-                .Take(8)
-                .ToPagedList(1, 8); 
 
-            
+            model.RelatedProducts = products
+                .OrderBy(p => p.ProductID)
+                .Take(8)
+                .ToPagedList(1, 8);
+
+
             model.TopProducts = products
                 .OrderByDescending(p => p.OrderDetails.Count())
                 .Take(8)
                 .ToPagedList(pageNumber, pageSize);
 
-            
+
             if (quantity.HasValue)
             {
                 model.quantity = quantity.Value;
             }
 
-            
+
             model.estimatedValue = model.Product.ProductPrice * model.quantity;
 
             return View(model);
@@ -90,31 +89,31 @@ namespace _24DH11420_LTTH_BE234.Controllers
         {
             if (categoryId == null)
             {
-                
+
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            
+
             var category = db.Categories.Find(categoryId);
             if (category == null)
             {
-                
+
                 return HttpNotFound();
             }
 
-            
+
             ViewBag.CategoryName = category.CategoryName;
 
-            
-            int pageSize = 6; 
+
+            int pageSize = 6;
             int pageNumber = (page ?? 1);
 
-            
+
             var products = db.Products
                 .Where(p => p.CategoryID == categoryId)
-                .OrderBy(p => p.ProductName); 
+                .OrderBy(p => p.ProductName);
 
-            
+
             return View(products.ToPagedList(pageNumber, pageSize));
         }
         protected override void Dispose(bool disposing)
