@@ -6,7 +6,6 @@
 }
 
 <style>
-    /* CSS từ slide 733 (và bổ sung) */
     .cart-section {
         background-color: white;
         border-radius: 10px;
@@ -56,10 +55,10 @@
                                 <th>Đơn giá</th>
                                 <th>Thành tiền</th>
                                 <th>
-                                    @* Nút Xóa Tất cả (ClearCart) *@
+                                   
                                     <a href="@Url.Action("ClearCart", "Cart")" title="Xóa tất cả mặt hàng trong giỏ"
                                        class="float-end">
-                                        <img src="~/images/remove.png" class="action-icon" />
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </th>
                             </tr>
@@ -84,7 +83,7 @@
                                     <td>@string.Format("{0:N0}", item.TotalPrice) ₫</td>
                                     <td>
                                         <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.ProductID })">
-                                            <img src="~/images/remove.png" class="action-icon" />
+                                            <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

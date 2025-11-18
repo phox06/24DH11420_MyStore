@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using _24DH11420_LTTH_BE234.Models;
+using PagedList;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using _24DH11420_LTTH_BE234.Models;
-using PagedList;
 
 namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 {
@@ -18,24 +15,24 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         // GET: Admin/Orders
         public ActionResult Index(string searchTerm, int? page)
         {
-            int pageSize = 10; 
+            int pageSize = 10;
             int pageNumber = (page ?? 1);
 
-            
+
             var orders = db.Orders.Include(o => o.Customer).AsQueryable();
 
-           
+
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 orders = orders.Where(o => o.Customer.CustomerName.Contains(searchTerm) ||
                                            o.PaymentStatus.Contains(searchTerm));
             }
 
-            
+
             var pagedOrders = orders.OrderByDescending(o => o.OrderDate)
                                     .ToPagedList(pageNumber, pageSize);
 
-            
+
             ViewBag.SearchTerm = searchTerm;
 
             return View(pagedOrders);
@@ -49,7 +46,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            
+
             Order order = db.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.OrderDetails.Select(d => d.Product))
@@ -139,9 +136,27 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Order order = db.Orders.Find(id);
+
+            Order order = db.Orders.Include(o => o.OrderDetails)
+                                    .SingleOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+
+            var detailsToRemove = order.OrderDetails.ToList();
+
+
+            db.OrderDetails.RemoveRange(detailsToRemove);
+
+
             db.Orders.Remove(order);
+
+
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

@@ -11,17 +11,8 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 {
     public class HomeController : BaseController
     {
-        string connectionString = @"Data Source=ASUS-TUF-F15\SQLEXPRESS; Initial Catalog=MyStore; Integrated Security=True; MultipleActiveResultSets=True";
+        
         private MyStoreEntities db = new MyStoreEntities();
-        public HomeController()
-        {
-            
-            db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
-        }
-        
-
-        
-
         public ActionResult Index()
         {
 
@@ -52,9 +43,6 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
 
             return View(); 
         }
-        
-        
-
         // GET: Admin/Home/Login
         public ActionResult Login()
         {
