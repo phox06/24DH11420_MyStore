@@ -129,7 +129,9 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Customer customer = db.Customers.Find(id);
+            Customer customer = db.Customers.Include(c => c.User)
+                                           .SingleOrDefault(c => c.CustomerID == id);
+
             if (customer == null)
             {
                 return HttpNotFound();
@@ -142,8 +144,28 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Customer customer = db.Customers.Find(id);
+           
+            Customer customer = db.Customers
+                .Include(c => c.Orders.Select(o => o.OrderDetails)) 
+                .SingleOrDefault(c => c.CustomerID == id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+
+           
+            foreach (var order in customer.Orders)
+            {
+                db.OrderDetails.RemoveRange(order.OrderDetails);
+            }
+
+            
+            db.Orders.RemoveRange(customer.Orders);
+
+           
             db.Customers.Remove(customer);
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }

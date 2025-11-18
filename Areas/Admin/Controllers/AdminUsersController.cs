@@ -15,7 +15,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         // GET: Admin/AdminUsers
         public ActionResult Index()
         {
-            
+
             var adminUsers = db.Users.Where(u => u.UserRole == "Admin").ToList();
             return View(adminUsers);
         }
@@ -27,7 +27,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             User user = db.Users.SingleOrDefault(u => u.Username == id && u.UserRole == "Admin");
             if (user == null)
             {
@@ -49,7 +49,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 user.UserRole = "Admin";
                 db.Users.Add(user);
                 db.SaveChanges();
@@ -81,7 +81,7 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 user.UserRole = "Admin";
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
@@ -111,11 +111,18 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             User user = db.Users.SingleOrDefault(u => u.Username == id && u.UserRole == "Admin");
+
             if (user != null)
             {
+                var customers = db.Customers.Where(c => c.Username == id);
+                if (customers.Any())
+                {
+                    db.Customers.RemoveRange(customers);
+                }
                 db.Users.Remove(user);
                 db.SaveChanges();
             }
+
             return RedirectToAction("Index");
         }
 
