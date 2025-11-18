@@ -49,7 +49,7 @@
                 <td>@string.Format("{0:N0}", order.TotalAmount) ₫</td>
                 <td>@order.PaymentStatus</td>
                 <td>
-                    @* Chúng ta sẽ tạo link này ở bước tiếp theo *@
+                   
                     @Html.ActionLink("Xem chi tiết", "Details", "Orders", new { id = order.OrderID }, new { @class = "btn btn-info btn-sm" })
                 </td>
             </tr>
