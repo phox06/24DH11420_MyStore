@@ -17,6 +17,7 @@
         <EntityTypeShape EntityType="MyStoreModel.Order" Width="1.5" PointX="3" PointY="11.75" />
         <AssociationConnector Association="MyStoreModel.FK__Order__CustomerI__412EB0B6" />
         <AssociationConnector Association="MyStoreModel.FK__OrderDeta__Order__44FF419A" />
+        <EntityTypeShape EntityType="MyStoreModel.CartItem" Width="1.5" PointX="7.375" PointY="1.375" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

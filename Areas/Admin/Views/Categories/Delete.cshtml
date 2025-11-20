@@ -12,7 +12,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            
+
             Tên danh mục
         </dt>
 
@@ -26,16 +26,12 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        <div class="form-group">
 
-        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Xóa" class="btn btn-primary" />
-                @Html.ActionLink("Quay lại danh sách ", "Index", new { id = Model.CategoryID }, new { @class = "btn btn-primary btn-sm" })
-            </div>
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-primary" /> |
+            @Html.ActionLink("Back to List", "Index")
         </div>
     }
 </div>

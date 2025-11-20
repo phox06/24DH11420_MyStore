@@ -110,9 +110,28 @@ namespace _24DH11420_LTTH_BE234.Areas.Admin.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+
+            try
+            {
+                // Try to delete
+                db.Categories.Remove(category);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException)
+            {
+                // If we get here, it means the database blocked the delete (Foreign Key error)
+                ModelState.AddModelError("", "You cannot delete this Category because it currently has Products inside it. Please remove the products first.");
+
+                // Return the user to the same Delete page to see the warning
+                return View(category);
+            }
+            catch (Exception)
+            {
+                // Catch any other general errors
+                ModelState.AddModelError("", "An error occurred. Please try again.");
+                return View(category);
+            }
         }
 
         protected override void Dispose(bool disposing)

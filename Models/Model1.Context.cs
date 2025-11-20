@@ -17,13 +17,9 @@ namespace _24DH11420_LTTH_BE234.Models
     {
         public MyStoreEntities()
             : base("name=MyStoreEntities")
-
         {
         }
-        public MyStoreEntities(string connectionString)
-            : base(connectionString) // <-- Dòng này chấp nhận chuỗi kết nối "hard-code" của chúng ta
-        {
-        }
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -36,5 +32,6 @@ namespace _24DH11420_LTTH_BE234.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<CartItem> CartItems { get; set; }
     }
 }

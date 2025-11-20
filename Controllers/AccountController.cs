@@ -179,9 +179,11 @@ namespace _24DH11420_LTTH_BE234.Controllers
                     Session["UserRole"] = user.UserRole;
 
                     
-                    FormsAuthentication.SetAuthCookie(user.Username, false); 
+                    FormsAuthentication.SetAuthCookie(user.Username, false);
+                    var cartService = new CartService(Session);
+                    cartService.LoadCartFromDatabase(model.Username);
 
-                    
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -239,14 +241,19 @@ namespace _24DH11420_LTTH_BE234.Controllers
         // GET: Account/Logout
         public ActionResult Logout()
         {
-            
+            var cartService = new CartService(Session);
+            if (User.Identity.IsAuthenticated)
+            {
+                cartService.SaveCartToDatabase(User.Identity.Name);
+            }
+
             Session.Clear();
 
             
             FormsAuthentication.SignOut();
 
-            
-            return RedirectToAction("Index", "Home");
+
+            return RedirectToAction("Login", "Account");
         }
 
         protected override void Dispose(bool disposing)
